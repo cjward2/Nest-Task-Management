@@ -12,11 +12,11 @@ export class TasksService {
   ) {}
 
   async findTasksByUserId(userId: number) {
-    return this.taskRespository.find({ where: { userId } });
+    return this.taskRespository.find({ where: { userId, isDeleted: false } });
   }
 
   async findTaskById(taskId: number) {
-    const task = this.taskRespository.findOne({ where: { id: taskId } });
+    const task = await this.taskRespository.findOne({ where: { id: taskId } });
 
     if (!task) {
       throw new NotFoundException(`Task ${taskId} not found.`);
@@ -26,7 +26,40 @@ export class TasksService {
   }
 
   async createTask(createTaskDto: CreateTaskDto) {
-    const task = this.taskRespository.create(createTaskDto);
+    const task = await this.taskRespository.create(createTaskDto);
+
+    return this.taskRespository.save(task);
+  }
+
+  async softDeleteTask(taskId: number) {
+    const task = await this.findTaskById(taskId);
+
+    task.isDeleted = true;
+
+    await this.taskRespository.save(task);
+  }
+
+  async findDeletedTasksByUserId(userId: number) {
+    const tasks = await this.taskRespository.find({
+      where: { userId, isDeleted: true },
+    });
+
+    if (!tasks || !tasks.length) {
+      throw new NotFoundException('No deleted tasks for user');
+    }
+
+    return tasks;
+  }
+
+  async updateTask(taskId: number, updateTaskDto: CreateTaskDto) {
+    const task = await this.taskRespository.preload({
+      id: taskId,
+      ...updateTaskDto,
+    });
+
+    if (!task) {
+      throw new NotFoundException(`Task ${taskId} not found`);
+    }
 
     return this.taskRespository.save(task);
   }

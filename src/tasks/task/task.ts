@@ -1,6 +1,8 @@
 import { User } from 'src/users/user/user';
 import {
+  BeforeUpdate,
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -27,4 +29,17 @@ export class Task {
   @ManyToOne(() => User, (user) => user.tasks)
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column({ default: false })
+  isDeleted: boolean;
+
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
+  deletedOn: Date;
+
+  @BeforeUpdate()
+  setDeletedOn() {
+    if (this.isDeleted && !this.deletedOn) {
+      this.deletedOn = new Date();
+    }
+  }
 }

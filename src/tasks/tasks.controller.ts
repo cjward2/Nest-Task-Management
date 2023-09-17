@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 
@@ -10,7 +18,7 @@ export class TasksController {
     return this.tasksService.findTasksByUserId(Number(userId));
   }
 
-  @Get(':taskId')
+  @Get('/task/:taskId')
   findTaskById(@Param('taskId') taskId: string) {
     return this.tasksService.findTaskById(Number(taskId));
   }
@@ -18,5 +26,23 @@ export class TasksController {
   @Post()
   createTask(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.createTask(createTaskDto);
+  }
+
+  @Delete(':taskId')
+  deleteTask(@Param('taskId') taskId: string) {
+    return this.tasksService.softDeleteTask(Number(taskId));
+  }
+
+  @Get('deleted/:userId')
+  findDeletedTasksByUserId(@Param('userId') userId: string) {
+    return this.tasksService.findDeletedTasksByUserId(Number(userId));
+  }
+
+  @Put(':taskId')
+  updateTask(
+    @Param('taskId') taskId: string,
+    @Body() updateTaskDto: CreateTaskDto,
+  ) {
+    return this.tasksService.updateTask(Number(taskId), updateTaskDto);
   }
 }
