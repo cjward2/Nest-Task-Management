@@ -16,7 +16,9 @@ export class TasksService {
   }
 
   async findTaskById(taskId: number) {
-    const task = await this.taskRespository.findOne({ where: { id: taskId } });
+    const task = await this.taskRespository.findOne({
+      where: { id: taskId, isDeleted: false },
+    });
 
     if (!task) {
       throw new NotFoundException(`Task ${taskId} not found.`);
