@@ -1,4 +1,6 @@
+import { Transform } from 'class-transformer';
 import { IsBoolean, IsDate, IsNotEmpty, IsOptional } from 'class-validator';
+import { TransformDate } from 'src/decorators/transform-date.decorator';
 
 export class CreateTaskDto {
   @IsNotEmpty()
@@ -8,6 +10,7 @@ export class CreateTaskDto {
   isCompleted: boolean;
 
   @IsOptional()
+  @Transform(TransformDate)
   @IsDate()
   dueDate: Date | null;
 
