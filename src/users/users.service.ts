@@ -15,11 +15,18 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async createUser(createUserDto: CreateUserDto) {
+  async findOne(createUserDto: CreateUserDto) {
+    const existingUser = await this.userRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+
+    if (existingUser) {
+      return existingUser;
+    }
+
+    //Upsert User if they dont exist
     const user = new User();
-
     user.email = createUserDto.email;
-
     return this.userRepository.save(user);
   }
 }

@@ -12,7 +12,7 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  findOne(@Body() createUserDto: CreateUserDto) {
+    return this.userService.findOne(createUserDto);
   }
 }
