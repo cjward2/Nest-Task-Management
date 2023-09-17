@@ -40,15 +40,9 @@ export class TasksService {
   }
 
   async findDeletedTasksByUserId(userId: number) {
-    const tasks = await this.taskRespository.find({
+    return this.taskRespository.find({
       where: { userId, isDeleted: true },
     });
-
-    if (!tasks || !tasks.length) {
-      throw new NotFoundException('No deleted tasks for user');
-    }
-
-    return tasks;
   }
 
   async updateTask(taskId: number, updateTaskDto: CreateTaskDto) {
