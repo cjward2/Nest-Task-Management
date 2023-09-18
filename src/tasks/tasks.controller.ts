@@ -14,13 +14,13 @@ import { CreateTaskDto } from './dto/create-task.dto';
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
   @Get(':userId')
-  findTasksByUserId(@Param('userId') userId: string) {
-    return this.tasksService.findTasksByUserId(Number(userId));
+  findTasksByUserId(@Param('userId') userId: number) {
+    return this.tasksService.findTasksByUserId(userId);
   }
 
   @Get('/task/:taskId')
-  findTaskById(@Param('taskId') taskId: string) {
-    return this.tasksService.findTaskById(Number(taskId));
+  findTaskById(@Param('taskId') taskId: number) {
+    return this.tasksService.findTaskById(taskId);
   }
 
   @Post()
@@ -29,20 +29,20 @@ export class TasksController {
   }
 
   @Delete(':taskId')
-  deleteTask(@Param('taskId') taskId: string) {
-    return this.tasksService.softDeleteTask(Number(taskId));
+  deleteTask(@Param('taskId') taskId: number) {
+    return this.tasksService.softDeleteTask(taskId);
   }
 
   @Get('deleted/:userId')
-  findDeletedTasksByUserId(@Param('userId') userId: string) {
-    return this.tasksService.findDeletedTasksByUserId(Number(userId));
+  findDeletedTasksByUserId(@Param('userId') userId: number) {
+    return this.tasksService.findDeletedTasksByUserId(userId);
   }
 
   @Put(':taskId')
   updateTask(
-    @Param('taskId') taskId: string,
+    @Param('taskId') taskId: number,
     @Body() updateTaskDto: CreateTaskDto,
   ) {
-    return this.tasksService.updateTask(Number(taskId), updateTaskDto);
+    return this.tasksService.updateTask(taskId, updateTaskDto);
   }
 }
